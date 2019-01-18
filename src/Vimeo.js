@@ -16,12 +16,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE. */
 (function (root, factory) {
-  if(typeof define === 'function' && define.amd) {
-    define(['video.js'], function(videojs){
+  if(typeof exports==='object' && typeof module!=='undefined') {
+    var videojs = require('video.js');
+    module.exports = factory(videojs.default || videojs);
+  } else if(typeof define === 'function' && define.amd) {
+    define(['videojs'], function(videojs){
       return (root.Vimeo = factory(videojs));
     });
-  } else if(typeof module === 'object' && module.exports) {
-    module.exports = (root.Vimeo = factory(require('video.js')));
   } else {
     root.Vimeo = factory(root.videojs);
   }
@@ -63,7 +64,7 @@ THE SOFTWARE. */
     },
 
     loadPoster: function() {
-      $.getJSON(this.baseApiUrl + this.videoId + '.json?callback=?', {format: "json"}, (function(_this){
+      jQuery.getJSON(this.baseApiUrl + this.videoId + '.json?callback=?', {format: "json"}, (function(_this){
         return function(data) {
           // Set the duration of the video, since it must be manually tracked with vimeo.
           _this.vimeoInfo.duration = data[0].duration;
@@ -83,7 +84,7 @@ THE SOFTWARE. */
 
             _this.poster(_this.poster_);
             _this.trigger('posterchange');
-            $(_this).find('.vjs-poster').css({
+            jQuery(_this).find('.vjs-poster').css({
               'background-image': 'url(' + _this.poster_ + ')'
             });
           }
@@ -145,7 +146,7 @@ THE SOFTWARE. */
     initPlayer: function() {
       var self = this;
 
-      $(self.iframe).load(function(){
+      jQuery(self.iframe).load(function(){
         //load vimeo
         if (self.vimeo && self.vimeo.api) {
           self.vimeo.api('unload');
@@ -348,7 +349,7 @@ THE SOFTWARE. */
 
       try {
         if(this.url.videoId != null){
-          $.getJSON(this.baseApiUrl + this.videoId + '.json?callback=?', {format: "json"}, (function(_uri){
+          jQuery.getJSON(this.baseApiUrl + this.videoId + '.json?callback=?', {format: "json"}, (function(_uri){
             return function(data) {
               // Set the low resolution first
               _uri = data[0].thumbnail_large;
